@@ -1,0 +1,12 @@
+{
+  "Id": "pta-bridge",
+  "DisplayName": "PTA Bridge",
+  "Author": "PTA",
+  "Version": "0.1.0",
+  "ManagerVersion": "0.27.0",
+  "Requirements": [],
+  "AssemblyName": "pta-bridge.dll",
+  "EntryMethod": "PtaBridge.Main.Load",
+  "HomePage": "https://github.com/adofaiex/pta-multichart",
+  "Repository": "https://github.com/adofaiex/pta-multichart"
+}

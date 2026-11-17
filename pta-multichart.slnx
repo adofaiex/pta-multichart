@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/mods/">
+    <Project Path="mods/pta-bridge/pta-bridge.csproj" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Mod/">
+    <Project Path="src/Mod/pta-multichart.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CompileTests/CompileTests.csproj" />
+    <Project Path="tests/LevelGen/LevelGen.csproj" />
+    <Project Path="tests/TimingTests/TimingTests.csproj" />
+  </Folder>
+</Solution>

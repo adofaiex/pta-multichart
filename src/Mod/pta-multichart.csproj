@@ -1,0 +1,116 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net481</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>pta-multichart</AssemblyName>
+    <RootNamespace>PtaMultichart</RootNamespace>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Deterministic>true</Deterministic>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <DebugType>portable</DebugType>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414;CS8632</NoWarn>
+    <GameDir Condition="'$(GameDir)' == '' and Exists('I:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice')">I:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice</GameDir>
+    <GameDir Condition="'$(GameDir)' == '' and Exists('C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice')">C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice</GameDir>
+    <ManagedDir Condition="'$(GameDir)' != ''">$(GameDir)\A Dance of Fire and Ice_Data\Managed</ManagedDir>
+    <UmmDir Condition="'$(ManagedDir)' != ''">$(ManagedDir)\UnityModManager</UmmDir>
+    <OutDir2>$(MSBuildProjectDirectory)\..\..\out\pta-multichart\</OutDir2>
+    <Deploy Condition="'$(Deploy)' == '' and '$(GameDir)' == ''">false</Deploy>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Core\**\*.cs" />
+    <Compile Include="**\*.cs" Exclude="bin\**;obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(ManagedDir)\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(ManagedDir)\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(ManagedDir)\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(ManagedDir)\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>$(ManagedDir)\UnityEngine.Physics2DModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(ManagedDir)\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>$(ManagedDir)\UnityEngine.UIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(ManagedDir)\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>$(ManagedDir)\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>$(ManagedDir)\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(ManagedDir)\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityModManager">
+      <HintPath>$(UmmDir)\UnityModManager.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(UmmDir)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="RDTools">
+      <HintPath>$(ManagedDir)\RDTools.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>$(ManagedDir)\DOTween.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(ManagedDir)\Unity.TextMeshPro.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(ManagedDir)\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="CopyToOut" AfterTargets="Build">
+    <ItemGroup>
+      <OutFiles Include="$(TargetPath)" />
+      <OutFiles Include="$(MSBuildProjectDirectory)\Info.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="$(OutDir2)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="Deploy" AfterTargets="CopyToOut" Condition="'$(Deploy)' != 'false'">
+    <ItemGroup>
+      <DeployFiles Include="$(OutDir2)\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(GameDir)\Mods\$(AssemblyName)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>
+
+
+

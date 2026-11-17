@@ -1,0 +1,99 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net481</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>pta-bridge</AssemblyName>
+    <RootNamespace>PtaBridge</RootNamespace>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Deterministic>true</Deterministic>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <DebugType>portable</DebugType>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414;CS8632</NoWarn>
+
+    <!-- 游戏目录（可用 -p:GameDir=... 或 -p:ManagedDir=... 覆盖） -->
+    <GameDir Condition="'$(GameDir)' == '' and Exists('I:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice')">I:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice</GameDir>
+    <GameDir Condition="'$(GameDir)' == '' and Exists('C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice')">C:\Program Files (x86)\Steam\steamapps\common\A Dance of Fire and Ice</GameDir>
+    <ManagedDir Condition="'$(ManagedDir)' == '' and '$(GameDir)' != ''">$(GameDir)\A Dance of Fire and Ice_Data\Managed</ManagedDir>
+    <UmmDir Condition="'$(UmmDir)' == '' and '$(ManagedDir)' != ''">$(ManagedDir)\UnityModManager</UmmDir>
+    <!-- 产物目录：out\pta-bridge\ -->
+    <BridgeOut>$(MSBuildProjectDirectory)\..\..\out\pta-bridge\</BridgeOut>
+    <Deploy Condition="'$(Deploy)' == '' and '$(GameDir)' == ''">false</Deploy>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="**\*.cs" Exclude="bin\**;obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(ManagedDir)\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(ManagedDir)\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(ManagedDir)\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(ManagedDir)\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(ManagedDir)\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>$(ManagedDir)\UnityEngine.UIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(ManagedDir)\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>$(ManagedDir)\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(ManagedDir)\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityModManager">
+      <HintPath>$(UmmDir)\UnityModManager.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- ADOBase 的基类 RDBaseDll 在 RDTools.dll 里 -->
+    <Reference Include="RDTools">
+      <HintPath>$(ManagedDir)\RDTools.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- 1) 落到 project\pta-multichart\out\pta-bridge\ -->
+  <Target Name="CopyToOut" AfterTargets="Build">
+    <ItemGroup>
+      <OutFiles Include="$(TargetPath)" />
+      <OutFiles Include="$(MSBuildProjectDirectory)\Info.json" />
+    </ItemGroup>
+    <MakeDir Directories="$(BridgeOut)" />
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="$(BridgeOut)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- 2) 部署到 <游戏>\Mods\pta-bridge\ （Deploy=false 可只构建不部署） -->
+  <Target Name="Deploy" AfterTargets="CopyToOut" Condition="'$(Deploy)' != 'false'">
+    <ItemGroup>
+      <DeployFiles Include="$(BridgeOut)*.dll" />
+      <DeployFiles Include="$(BridgeOut)*.pdb" />
+      <DeployFiles Include="$(BridgeOut)Info.json" />
+    </ItemGroup>
+    <MakeDir Directories="$(GameDir)\Mods\$(AssemblyName)" />
+    <Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(GameDir)\Mods\$(AssemblyName)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

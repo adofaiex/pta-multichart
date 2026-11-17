@@ -1,0 +1,12 @@
+{
+  "Id": "pta-multichart",
+  "DisplayName": "PTA Multichart",
+  "Author": "PTA",
+  "Version": "0.1.0",
+  "ManagerVersion": "0.27.0",
+  "Requirements": [],
+  "AssemblyName": "pta-multichart.dll",
+  "EntryMethod": "PtaMultichart.Main.Load",
+  "HomePage": "https://github.com/adofaiex/pta-multichart",
+  "Repository": "https://github.com/adofaiex/pta-multichart"
+}

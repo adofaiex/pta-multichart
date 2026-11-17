@@ -1,0 +1,24 @@
+# Build artifacts
+bin/
+obj/
+out/
+*.dll
+*.pdb
+*.exe
+*.cache
+*.user
+*.suo
+*.sln.docstates
+
+# IDE / OS
+.vs/
+.idea/
+.vscode/
+*.lnk
+Thumbs.db
+Desktop.ini
+
+# Runtime / debug logs
+*.log
+bridge.log*
+*.tmp
